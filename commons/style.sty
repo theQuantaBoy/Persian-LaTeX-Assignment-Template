@@ -1,0 +1,389 @@
+% ------------------------------------------------------------------------
+% style.sty - Cleaned Custom Style for Persian University Assignments
+% ------------------------------------------------------------------------
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{commons/style}[2026/04/27 v2.0 Persian Assignment Style]
+
+\IfFileExists{./build/}{}{\immediate\write18{mkdir -p build}}
+
+% ------------------------------------------------------------------------
+% 1. Required Packages
+% ------------------------------------------------------------------------
+\RequirePackage[margin=1in]{geometry}
+\RequirePackage{graphicx, xcolor}
+\RequirePackage{amsmath, amssymb, amsthm, mathtools}
+\RequirePackage{physics}
+\RequirePackage[outputdir=build]{minted}
+\RequirePackage[colorlinks=true, linkcolor=blue, urlcolor=cyan, citecolor=green]{hyperref}
+\RequirePackage{tikz}
+\RequirePackage[localise=on]{xepersian} % Must be loaded last
+
+% ------------------------------------------------------------------------
+% 2. Configurations & Styling
+% ------------------------------------------------------------------------
+
+% Code listing style
+\setminted{
+	autogobble,
+	linenos,
+	breaklines,
+	frame=lines,
+	fontsize=\small,
+	baselinestretch=1.2,
+	tabsize=4
+}
+
+% ------------------------------------------------------------------------
+% Fonts
+% ------------------------------------------------------------------------
+
+% Persian text and digits
+\settextfont[Scale=1.0,
+	Path=fonts/,
+	UprightFont=XBNiloofar.ttf,
+	BoldFont=XBNiloofarBd.ttf,
+	ItalicFont=XBNiloofarIt.ttf,
+	BoldItalicFont=XBNiloofarBdIt.ttf
+]{XBNiloofar}
+
+\setdigitfont[Scale=1.0,
+	Path=fonts/,
+	UprightFont=XBNiloofar.ttf,
+	BoldFont=XBNiloofarBd.ttf,
+	ItalicFont=XBNiloofarIt.ttf,
+	BoldItalicFont=XBNiloofarBdIt.ttf
+]{XBNiloofar}
+
+\defpersianfont\sayeh[Scale=1.0, Path=fonts/]{XBKayhanPook.ttf}
+
+% Latin / English font
+\setlatintextfont[Scale=1.0]{Latin Modern Roman}
+
+% ------------------------------------------------------------------------
+% Layout & Spacing
+% ------------------------------------------------------------------------
+\setlength{\parindent}{0em}
+\setlength{\parskip}{.5em}
+\renewcommand{\labelitemi}{\small$\bullet$}
+\pagestyle{plain}
+
+% Tables get a bit more breathing room
+\renewcommand{\arraystretch}{1.3}
+
+% Footnotes use smaller numbers
+\renewcommand{\thefootnote}{\scriptsize\arabic{footnote}}
+
+% Prevent LaTeX from stretching pages to an exact bottom margin
+\raggedbottom
+
+% Fix math spacing around display equations
+\g@addto@macro\normalsize{%
+	\setlength\abovedisplayskip{.8em}
+	\setlength\abovedisplayshortskip{.55em}
+	\setlength\belowdisplayskip{.8em}
+	\setlength\belowdisplayshortskip{.69em}
+}
+
+% ------------------------------------------------------------------------
+% 3. Header Variables
+% ------------------------------------------------------------------------
+\newcommand{\coursetitle}[1]{\def\@coursetitle{#1}}
+\newcommand{\semester}[1]{\def\@semester{#1}}
+\newcommand{\prof}[1]{\def\@prof{#1}}
+\newcommand{\studentname}[1]{\def\@studentname{#1}}
+\newcommand{\studentid}[1]{\def\@studentid{#1}}
+\newcommand{\assignmenttype}[1]{\def\@assignmenttype{#1}}
+\newcommand{\assignmenttitle}[1]{\def\@assignmenttitle{#1}}
+
+\coursetitle{} \semester{} \prof{} \studentname{} \studentid{} \assignmenttype{} \assignmenttitle{}
+
+% ------------------------------------------------------------------------
+% 3.5. Report Cover Variables (for Lab Reports, Project Reports, etc.)
+% ------------------------------------------------------------------------
+\newcommand{\reportcoursename}[1]{\def\@reportcoursename{#1}}
+\newcommand{\reportsemester}[1]{\def\@reportsemester{#1}}
+\newcommand{\reportprof}[1]{\def\@reportprof{#1}}
+\newcommand{\reportgroupmembers}[1]{\def\@reportgroupmembers{#1}} % use \\ for multiple names
+\newcommand{\reportdepartment}[1]{\def\@reportdepartment{#1}}
+\newcommand{\reportuniversity}[1]{\def\@reportuniversity{#1}}
+\newcommand{\reportsubtitle}[1]{\def\@reportsubtitle{#1}}
+\newcommand{\reporttitle}[1]{\def\@reporttitle{#1}}
+\newcommand{\reportenglishtitle}[1]{\def\@reportenglishtitle{#1}}
+\newcommand{\reportTS}[1]{\def\@reportTS{#1}}
+
+% Defaults (empty)
+\reportcoursename{}
+\reportsemester{}
+\reportprof{}
+\reportgroupmembers{}
+\reportdepartment{دانشکده‌ی مهندسی کامپیوتر}
+\reportuniversity{دانشگاه صنعتی شریف}
+\reportsubtitle{}
+\reporttitle{}
+\reportenglishtitle{}
+\reportTS{}
+
+
+% ------------------------------------------------------------------------
+% 4. Custom Header Generation
+% ------------------------------------------------------------------------
+\newcommand{\heading}[4]{%
+	\parindent=0em
+	\noindent
+	% Right Block (Logo and Uni Info)
+	\begin{minipage}[b]{0.48\textwidth}
+		\makebox[\textwidth][r]{\includegraphics[height=2.0cm]{commons/logo.png}}
+		\\[0.3em]
+		{\scriptsize\bfseries دانشگاه صنعتی شریف \\ دانشکده‌ی مهندسی کامپیوتر}
+	\end{minipage}%
+	\hfill
+	% Left Block (Course and Student Info)
+	\begin{minipage}[b]{0.48\textwidth}
+		\makebox[\textwidth][l]{\LARGE\bfseries \@coursetitle}
+		\\[0.3em]
+		\makebox[\textwidth][l]{\bfseries \@semester}
+		\\[0.3em]
+		\makebox[\textwidth][l]{\small #4}
+		\\[0.3em]
+		\makebox[\textwidth][l]{\small #3}
+	\end{minipage}
+
+	\vspace{1.2em}
+	\hrule height .12em
+	\normalsize
+	\vspace{0.0em}
+
+	% Bottom Bar
+	\noindent
+	\makebox[5cm][r]{#1}%
+	\hfill
+	\makebox[5cm][c]{#2}%
+	\hfill
+	\makebox[5cm][l]{}
+
+	\vspace{0.45em}
+	\hrule height .12em
+	\vspace{0.75em}
+}
+
+\renewcommand{\maketitle}{%
+	\thispagestyle{empty}
+	\heading
+	{\@assignmenttype}%
+	{\ifx\@assignmenttitle\empty\else\@assignmenttitle\fi}%
+	{\@studentname\ - \@studentid}%
+	{استاد: \@prof}%
+	\thispagestyle{plain}
+	\setcounter{page}{1}
+}
+
+% ------------------------------------------------------------------------
+% 4.5. Report Cover Page
+% ------------------------------------------------------------------------
+\newcommand{\makecover}{%
+	\thispagestyle{empty}
+	\begin{center}
+		\includegraphics[height=2.5cm]{commons/logo.png}
+
+		\vspace{-0.2cm}
+		\@reportuniversity \\[-0.3em]
+		\@reportdepartment \\
+
+		\vspace{2cm} % Increased from 1.5cm
+
+		% Subtitle
+		\ifx\@reportsubtitle\empty\else
+			{\@reportsubtitle}\\[1.0em]
+		\fi
+
+		% Report title
+		\ifx\@reporttitle\empty\else
+			{\LARGE\bfseries \@reporttitle}\\
+			\vspace{1.5cm}
+		\fi
+
+		% English title
+		\ifx\@reportenglishtitle\empty
+			% Add extra space if no English title exists to balance the page
+			\vspace{1.5cm}
+		\else
+			\begin{latin}
+				{\Large\bfseries \@reportenglishtitle}
+			\end{latin}
+			\vspace{2.0cm}
+		\fi
+
+		% Group members
+		\ifx\@reportgroupmembers\empty\else
+			{اعضای گروه}\\[0.6em]
+			{\large\bfseries \@reportgroupmembers}
+			\vspace{1.5cm}
+		\fi
+
+		% Course name
+		\ifx\@reportcoursename\empty\else
+			{نام درس}\\[0.6em]
+			{\large\bfseries \@reportcoursename}
+			\vspace{1.5cm}
+		\fi
+
+		% Semester
+		\ifx\@reportsemester\empty\else
+			{\large\bfseries \@reportsemester}
+			\vspace{1.5cm}
+		\fi
+
+		% Instructor
+		\ifx\@reportprof\empty\else
+			{نام استاد}\\[0.8em]
+			{\large\bfseries \@reportprof}
+			\vspace{1cm}
+		\fi
+
+		% Teaching assistant
+		\ifx\@reportTS\empty\else
+			{دستیار آموزشی}\\[0.8em]
+			{\large\bfseries \@reportTS}
+			\vspace{1.5cm}
+		\fi
+
+	\end{center}
+	\newpage
+	\thispagestyle{plain}
+}
+
+% ------------------------------------------------------------------------
+% 5. Structural Commands
+% ------------------------------------------------------------------------
+
+% Section-like centered heading
+\newcommand{\sectiontitle}[1]{%
+	\par\vspace*{0.5em}
+	\begin{center}\Large #1\end{center}
+	\vspace{0.3em}
+}
+
+% Question command without automatic page breaks
+\newcounter{question}
+\setcounter{question}{0}
+
+\NewDocumentCommand{\question}{ o m }{
+	\IfValueTF{#1}
+	{\setcounter{question}{#1}}
+	{\stepcounter{question}}%
+	\noindent\textbf{سوال \arabic{question}:} \textbf{#2}
+}
+
+% Persian proof environment
+\renewenvironment{proof}{\begin{trivlist}\item[\hskip\labelsep{\em اثبات.}]}{\hspace*{\fill}\ensuremath{\square}\end{trivlist}}
+
+% Subsection formatting
+\makeatletter
+\renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}
+	{-2ex}
+	{0.5ex}
+	{\normalfont\normalsize\bfseries}
+}
+
+% ------------------------------------------------------------------------
+% Persian Enumerations
+% ------------------------------------------------------------------------
+
+\def\harfi#1{\expandafter\@harfi\csname c@#1\endcsname}   % alef, be, pe, te, ...
+\def\abjad#1{\expandafter\@abjad\csname c@#1\endcsname}   % alef, be, jim, dal, ...
+\def\adadi#1{\expandafter\@adadi\csname c@#1\endcsname}   % yek, do, se, ...
+\def\Aharfi#1{\expandafter\@Aharfi\csname c@#1\endcsname} % alef, be, pe, te, ... (tak harfi)
+
+\def\@harfi#1{\beginR\@@harfi#1\endR}
+\def\@@harfi#1{%
+	\ifcase#1\or الف\or ب\or پ\or ت\or ث\or ج\or چ\or ح\or خ\or د\or ذ\or ر\or ز\or ژ\else\@ctrerr\fi}
+
+\def\@abjad#1{\beginR\@@abjad#1\endR}
+\def\@@abjad#1{%
+	\ifcase#1\or آ\or ب\or ج\or د\or ه\or و\or ز\or ح\or ط\or ی\or ک\or ل\or م\or ن\else\@ctrerr\fi}
+
+\def\@adadi#1{\beginR\@@adadi#1\endR}
+\def\@@adadi#1{%
+	\ifcase#1 یک\or دو\or سه\or چهار\or پنج\or شش\or هفت\or هشت\or نه\or ده\else\@ctrerr\fi}
+
+\def\@Aharfi#1{\beginR\@@Aharfi#1\endR}
+\def\@@Aharfi#1{%
+	\ifcase#1\or آ\or ب\or پ\or ت\or ث\or ج\or چ\or ح\or خ\or د\or ذ\or ر\or ز\or ژ\else\@ctrerr\fi}
+
+% List environments using the above counters
+\newcounter{alef}
+\newenvironment{ابجد}{%
+	\setcounter{alef}{0}
+	\begin{list}{(\abjad{alef})}
+		{\usecounter{alef}}}
+		{\end{list}}
+
+\newenvironment{الفبا}{%
+	\setcounter{alef}{0}
+	\begin{list}{(\Aharfi{alef})}
+		{\usecounter{alef}}}
+		{\end{list}}
+
+% ------------------------------------------------------------------------
+% Inline Code Command
+% ------------------------------------------------------------------------
+\providecommand{\code}[1]{\lr{\ttfamily #1}}
+
+% ------------------------------------------------------------------------
+% 6. Math Shortcuts & Misc
+% ------------------------------------------------------------------------
+
+% Number sets
+\newcommand{\IN}{\ensuremath{\mathbb{N}}}
+\newcommand{\IZ}{\ensuremath{\mathbb{Z}}}
+\newcommand{\IQ}{\ensuremath{\mathbb{Q}}}
+\newcommand{\IR}{\ensuremath{\mathbb{R}}}
+\newcommand{\IC}{\ensuremath{\mathbb{C}}}
+
+% Basic delimiters and functions
+\newcommand{\set}[1]{\left\{ #1 \right\}}
+\newcommand{\seq}[1]{\left\langle #1 \right\rangle}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\card}[1]{\left| #1 \right|}
+
+% Additional set / relation notations
+\newcommand{\setcomp}[1]{\overline{#1}}
+\newcommand{\provided}{\,:\,}
+\newcommand{\divs}{\mid}
+\newcommand{\ndivs}{\nmid}
+\newcommand{\iequiv}[1]{\,\overset{#1}{\equiv}\,}
+\newcommand{\imod}[1]{\allowbreak\mkern5mu(#1\,\,\text{به پیمانه‌ی})}
+
+% Asymptotic and number theory shortcuts
+\newcommand{\poly}{\mathop{\mathrm{poly}}}
+\newcommand{\polylog}{\mathop{\mathrm{polylog}}}
+\newcommand{\lcm}{\mathop{\mathrm{lcm}}}
+
+% Slanted inequality signs
+\newcommand{\lee}{\leqslant}
+\newcommand{\gee}{\geqslant}
+\renewcommand{\leq}{\lee}
+\renewcommand{\le}{\lee}
+\renewcommand{\geq}{\gee}
+\renewcommand{\ge}{\gee}
+
+% Left-to-right text command
+\providecommand{\lr}[1]{{\textdir TLT #1}}
+
+% ------------------------------------------------------------------------
+% Report Sectioning Commands (clean, no numbering)
+% ------------------------------------------------------------------------
+\newcommand{\reportsection}[1]{%
+	\par\vspace{1.2em}
+	\noindent{\Large\bfseries #1}
+	\par\vspace{0.6em}
+}
+
+\newcommand{\reportsubsection}[1]{%
+	\par\vspace{0.8em}
+	\noindent{\large\bfseries #1}
+	\par\vspace{0.3em}
+}
+
+\endinput
