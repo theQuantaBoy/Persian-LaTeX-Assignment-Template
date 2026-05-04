@@ -149,7 +149,7 @@ Add the following **LaTeX‑related** settings to your `settings.json` (the rest
 
 ## 🏫 Use Online
 
-You can use this template directly in the Sharif University online LaTeX editor [here](https://latex.sharif.edu/read/qvrcgxwpdktc).  
+You can use this template directly in the Sharif University online LaTeX editor [here](https://latex.sharif.edu/read/qdhgndghvrsv).  
 Make sure the compiler is set to **XeLaTeX**.
 
 ---
