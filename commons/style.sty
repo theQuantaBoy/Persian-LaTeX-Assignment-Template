@@ -1,6 +1,7 @@
 % ------------------------------------------------------------------------
 % style.sty - Persian assignment / report template (XeLaTeX)
 % Intended for Sharif University of Technology (customizable).
+% Most users only need to edit main.tex; this file is for style-level changes.
 % ------------------------------------------------------------------------
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{commons/style}[2026/04/27 v2.0 Persian Assignment Style]
@@ -33,9 +34,8 @@
 	\RequirePackage[newfloat, outputdir=build]{minted}
 \else
 	\RequirePackage{listings}
-	% Compatibility shim: allow documents using minted syntax to compile
+	% Keeps \begin{minted}...\end{minted} working in listings mode.
 	\providecommand{\setminted}[1]{\lstset{#1}}
-	% Must be defined via listings to be verbatim-safe
 	\lstnewenvironment{minted}[1]{\lstset{language=#1}}{}
 \fi
 
@@ -70,8 +70,8 @@
 		\commons@orig@includegraphics[#1]{#2}%
 	}{%
 		\fbox{\begin{minipage}{0.9\linewidth}\raggedright
-			Missing image: \lr{#2}
-		\end{minipage}}%
+				Missing image: \lr{#2}
+			\end{minipage}}%
 	}%
 }
 \makeatother
@@ -113,8 +113,6 @@
 	ItalicFont=XBNiloofarIt.ttf,
 	BoldItalicFont=XBNiloofarBdIt.ttf
 ]{XBNiloofar}
-
-\defpersianfont\sayeh[Scale=1.0, Path=fonts/]{XBKayhanPook.ttf}
 
 % Latin / English font
 \setlatintextfont[Scale=1.0]{Latin Modern Roman}
