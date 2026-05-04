@@ -1,0 +1,33 @@
+\question{نمونه‌ی کدنویسی}
+
+این فایل نشان می‌دهد چطور کد را در پاسخ‌ها قرار دهید.
+برای نوشتن کلمات کلیدی کوتاه داخل متن، می‌توانید از \code{...} استفاده کنید؛ مثلاً \code{for} یا \code{while}.
+
+\subsection{کد کوتاه}
+قالب به‌صورت پیش‌فرض بدون نیاز به \lr{-shell-escape} کامپایل می‌شود (حالت \lr{listings}).
+اگر خواستید خروجی بهتر \lr{minted} داشته باشید، در \lr{\texttt{main.tex}} بنویسید:
+\lr{\texttt{\textbackslash usepackage[minted]\{commons/style\}}}
+
+\subsection{یک قطعه کد}
+\begin{listing}[H]
+	\begin{latin}
+		\begin{minted}{python}
+def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
+		\end{minted}
+	\end{latin}
+	\caption{نمونه‌ی کد (Python)}
+\end{listing}
+
+\subsection{یک نکته‌ی کوچک}
+اگر می‌خواهید داخل پاسخ، نام فایل/دستور را واضح بنویسید:
+\begin{ابجد}
+	\item فایل: \lr{\texttt{answers/template\_code.tex}}
+	\item دستور: \lr{\texttt{\textbackslash lr\{...\}}}
+\end{ابجد}
+
+\subsection{نکته‌ی متنی}
+داخل متن فارسی هم می‌توانید عبارت انگلیسی بیاورید: \lr{time complexity}، یا حتی نام تابع مثل \lr{gcd}.
+

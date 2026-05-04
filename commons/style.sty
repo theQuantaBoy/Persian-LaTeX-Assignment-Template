@@ -1,10 +1,20 @@
 % ------------------------------------------------------------------------
-% style.sty - Cleaned Custom Style for Persian University Assignments
+% style.sty - Persian assignment / report template (XeLaTeX)
+% Intended for Sharif University of Technology (customizable).
 % ------------------------------------------------------------------------
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{commons/style}[2026/04/27 v2.0 Persian Assignment Style]
 
-\IfFileExists{./build/}{}{\immediate\write18{mkdir -p build}}
+% ------------------------------------------------------------------------
+% Package options
+% - minted: requires -shell-escape and Python/Pygments
+% - listings (default): works without -shell-escape (Overleaf-friendly)
+% ------------------------------------------------------------------------
+\newif\ifcommonsminted
+\commonsmintedfalse
+\DeclareOption{minted}{\commonsmintedtrue}
+\DeclareOption{listings}{\commonsmintedfalse}
+\ProcessOptions\relax
 
 % ------------------------------------------------------------------------
 % 1. Required Packages
@@ -13,25 +23,75 @@
 \RequirePackage{graphicx, xcolor}
 \RequirePackage{amsmath, amssymb, amsthm, mathtools}
 \RequirePackage{physics}
-\RequirePackage[outputdir=build]{minted}
+\RequirePackage{array}
+\RequirePackage[normalem]{ulem}
+\RequirePackage{float} % provides [H] placement specifier
+\RequirePackage{ifthen}
+\RequirePackage{expl3}
+
+\ifcommonsminted
+	\RequirePackage[newfloat, outputdir=build]{minted}
+\else
+	\RequirePackage{listings}
+	% Compatibility shim: allow documents using minted syntax to compile
+	\providecommand{\setminted}[1]{\lstset{#1}}
+	% Must be defined via listings to be verbatim-safe
+	\lstnewenvironment{minted}[1]{\lstset{language=#1}}{}
+\fi
+
+\ifcommonsminted\else
+	% Provide a "listing" float (minted's newfloat normally defines this)
+	\newfloat{listing}{H}{lol}
+	\floatname{listing}{کد}
+\fi
+
+\ifcommonsminted\else
+	\lstset{
+		basicstyle=\ttfamily\small,
+		breaklines=true,
+		numbers=left,
+		numberstyle=\scriptsize,
+		frame=lines,
+		tabsize=4,
+		columns=fullflexible
+	}
+\fi
 \RequirePackage[colorlinks=true, linkcolor=blue, urlcolor=cyan, citecolor=green]{hyperref}
 \RequirePackage{tikz}
 \RequirePackage[localise=on]{xepersian} % Must be loaded last
+
+% ------------------------------------------------------------------------
+% Make missing images non-fatal (useful for sharing templates)
+% ------------------------------------------------------------------------
+\makeatletter
+\let\commons@orig@includegraphics\includegraphics
+\RenewDocumentCommand{\includegraphics}{ O{} m }{%
+	\IfFileExists{#2}{%
+		\commons@orig@includegraphics[#1]{#2}%
+	}{%
+		\fbox{\begin{minipage}{0.9\linewidth}\raggedright
+			Missing image: \lr{#2}
+		\end{minipage}}%
+	}%
+}
+\makeatother
 
 % ------------------------------------------------------------------------
 % 2. Configurations & Styling
 % ------------------------------------------------------------------------
 
 % Code listing style
-\setminted{
-	autogobble,
-	linenos,
-	breaklines,
-	frame=lines,
-	fontsize=\small,
-	baselinestretch=1.2,
-	tabsize=4
-}
+\ifcommonsminted
+	\setminted{
+		autogobble,
+		linenos,
+		breaklines,
+		frame=lines,
+		fontsize=\small,
+		baselinestretch=1.2,
+		tabsize=4
+	}
+\fi
 
 % ------------------------------------------------------------------------
 % Fonts
@@ -77,16 +137,19 @@
 \raggedbottom
 
 % Fix math spacing around display equations
+\makeatletter
 \g@addto@macro\normalsize{%
 	\setlength\abovedisplayskip{.8em}
 	\setlength\abovedisplayshortskip{.55em}
 	\setlength\belowdisplayskip{.8em}
 	\setlength\belowdisplayshortskip{.69em}
 }
+\makeatother
 
 % ------------------------------------------------------------------------
 % 3. Header Variables
 % ------------------------------------------------------------------------
+\makeatletter
 \newcommand{\coursetitle}[1]{\def\@coursetitle{#1}}
 \newcommand{\semester}[1]{\def\@semester{#1}}
 \newcommand{\prof}[1]{\def\@prof{#1}}
@@ -252,9 +315,31 @@
 	\thispagestyle{plain}
 }
 
+\makeatother
+
 % ------------------------------------------------------------------------
 % 5. Structural Commands
 % ------------------------------------------------------------------------
+
+% ------------------------------------------------------------------------
+% Document type & front matter
+% Usage:
+%   \doctype{assignment} or \doctype{report}
+%   \MakeFrontMatter
+% ------------------------------------------------------------------------
+\newif\ifcommonsreport
+\commonsreportfalse
+\NewDocumentCommand{\doctype}{m}{%
+	\edef\commonsdoctype{#1}%
+	\ifthenelse{\equal{\commonsdoctype}{report}}{\commonsreporttrue}{\commonsreportfalse}%
+}
+\NewDocumentCommand{\MakeFrontMatter}{}{%
+	\ifcommonsreport
+		\makecover
+	\else
+		\maketitle
+	\fi
+}
 
 % Section-like centered heading
 \newcommand{\sectiontitle}[1]{%
@@ -267,12 +352,31 @@
 \newcounter{question}
 \setcounter{question}{0}
 
+\newcommand{\resetquestions}{\setcounter{question}{0}}
+
 \NewDocumentCommand{\question}{ o m }{
 	\IfValueTF{#1}
 	{\setcounter{question}{#1}}
 	{\stepcounter{question}}%
 	\noindent\textbf{سوال \arabic{question}:} \textbf{#2}
 }
+
+% ------------------------------------------------------------------------
+% Answer file helpers
+% Usage: \answers{theory1,theory2}
+% Expands to: \input{answers/theory1} \clearpage \input{answers/theory2}
+% ------------------------------------------------------------------------
+\ExplSyntaxOn
+\NewDocumentCommand{\answers}{m}{
+	\bool_set_true:N \l__commons_answers_first_bool
+	\clist_map_inline:nn { #1 } {
+		\bool_if:NF \l__commons_answers_first_bool { \clearpage }
+		\bool_set_false:N \l__commons_answers_first_bool
+		\input{answers/##1}
+	}
+}
+\bool_new:N \l__commons_answers_first_bool
+\ExplSyntaxOff
 
 % Persian proof environment
 \renewenvironment{proof}{\begin{trivlist}\item[\hskip\labelsep{\em اثبات.}]}{\hspace*{\fill}\ensuremath{\square}\end{trivlist}}

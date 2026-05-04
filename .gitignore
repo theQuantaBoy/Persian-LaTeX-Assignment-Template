@@ -1,35 +1,28 @@
-## LaTeX build artifacts
+# LaTeX build outputs (common)
 *.aux
 *.bbl
 *.bcf
 *.blg
 *.fdb_latexmk
 *.fls
-*.idx
-*.ilg
-*.ind
-*.lof
 *.log
-*.lot
-*.nav
-*.nlo
-*.nls
 *.out
 *.run.xml
-*.snm
 *.synctex.gz
 *.toc
-*.vrb
 *.xdv
 
-## minted (Pygments) output
-_minted*
-*.pyg
-
-## Local build dir (keep the final PDF)
-build/*
-!build/
-!build/main.pdf
-
-## Misc local logs
+# latexindent
 indent.log
+
+# XePersian / misc logs
+texput.log
+*.nav
+*.snm
+
+# Minted (Pygments) cache
+_minted-*
+
+# Local build directory (recommended outDir)
+build/
+

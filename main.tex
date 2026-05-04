@@ -4,61 +4,58 @@
 \begin{document}
 
 % ------------------------------------------------------------------------
-% Document Mode: Assignment or Report
-% (Comment/uncomment the desired block below)
+% Document mode
 % ------------------------------------------------------------------------
+\doctype{assignment} % or: \doctype{report}
 
-% ============================= Report Mode ==============================
+% ========================================================================
+% Fill the relevant block(s) below.
+% ========================================================================
 
+% ------------------------------ Assignment ------------------------------
+% --- Course Information ---
+\coursetitle{نام درس}
+\semester{نیم‌سال / ترم}
+\prof{نام استاد}
+
+% --- Student Information ---
+\studentname{نام دانشجو}
+\studentid{401234567}
+
+% --- Assignment Details ---
+\assignmenttype{تمرین شماره X}
+\assignmenttitle{عنوان تمرین}
+
+% ------------------------------- Report ---------------------------------
 % --- Course & Semester ---
-\reportcoursename{آزمایشگاه مدارهای منطقی}
-\reportsemester{بهار ۱۴۰۵}
+\reportcoursename{نام درس / آزمایشگاه}
+\reportsemester{نیم‌سال / ترم}
 
 % --- Instructors ---
-% \reportprof{محسن انصاری}
-\reportTS{مهدی صادقی نژاد}
+\reportprof{نام استاد}
+\reportTS{نام دستیار آموزشی}
 
 % --- Group Members ---
-\reportgroupmembers{محسن صلاح (403106238) \\ مشتاق معتضدیان (403106719)}
+\reportgroupmembers{نام ۱ (401234567) \\ نام ۲ (401234568)}
 
 % --- University & Department ---
 \reportdepartment{دانشکده‌ی مهندسی کامپیوتر}
 \reportuniversity{دانشگاه صنعتی شریف}
 
 % --- Report Title ---
-\reportsubtitle{گزارش آزمایش اول:}
-\reporttitle{آشنایی با تجهیزات آزمایشگاه و نحوه استفاده از کاتالوگ‌ها}
+\reportsubtitle{گزارش / پروژه:}
+\reporttitle{عنوان گزارش}
 
-\makecover
-
-% =========================== Assignment Mode ============================
-
-% % --- Course Information ---
-% \coursetitle{هوش مصنوعی}
-% \semester{بهار 1405}
-% \prof{ماری‌اوریاد}
-
-% % --- Student Information ---
-% \studentname{محسن صلاح}
-% \studentid{403106238}
-
-% % --- Assignment Details ---
-% \assignmenttype{تمرین اول}
-% \assignmenttitle{جستجوی ناآگاهانه، آگاهانه و محلی}
-
-% \maketitle
+\MakeFrontMatter
 
 % ========================================================================
 
 \sectiontitle{تمارین تئوری}
-\input{answers/theory1}
-
-\clearpage
-\input{answers/theory2}
+\answers{template_theory,template_tables_figures,template_code}
 
 \clearpage
 \sectiontitle{تمارین عملی}
-\setcounter{question}{0}
-\input{answers/practical1}
+\resetquestions
+\answers{practical1}
 
 \end{document}
