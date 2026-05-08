@@ -58,7 +58,7 @@
 \fi
 \RequirePackage[colorlinks=true, linkcolor=blue, urlcolor=cyan, citecolor=green]{hyperref}
 \RequirePackage{tikz}
-\RequirePackage[localise=on]{xepersian} % Must be loaded last
+\RequirePackage{xepersian} % Must be loaded last
 
 % ------------------------------------------------------------------------
 % Make missing images non-fatal (useful for sharing templates)
@@ -227,16 +227,20 @@
 	\vspace{0.75em}
 }
 
-\renewcommand{\maketitle}{%
-	\thispagestyle{empty}
-	\heading
-	{\@assignmenttype}%
-	{\ifx\@assignmenttitle\empty\else\@assignmenttitle\fi}%
-	{\@studentname\ - \@studentid}%
-	{استاد: \@prof}%
-	\thispagestyle{plain}
-	\setcounter{page}{1}
+\makeatletter
+\AtBeginDocument{%
+	\renewcommand{\maketitle}{%
+		\thispagestyle{empty}
+		\heading
+		{\@assignmenttype}%
+		{\ifx\@assignmenttitle\empty\else\@assignmenttitle\fi}%
+		{\@studentname\ - \@studentid}%
+		{استاد: \@prof}%
+		\thispagestyle{plain}
+		\setcounter{page}{1}%
+	}%
 }
+\makeatother
 
 % ------------------------------------------------------------------------
 % 4.5. Report Cover Page
